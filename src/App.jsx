@@ -9,7 +9,7 @@ function App() {
   const navigate = useNavigate() // <-- Hook para redireccionar
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -20,20 +20,26 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button 
+          onClick={() => setCount((count) => count + 1)}
+          className="mb-4 w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+        >
+          El contador es {count}
         </button>
-        <button onClick={() => navigate('/login')}>
+        <button 
+          onClick={() => navigate('/login')}
+          className="w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+        >
           Ir al login
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+        <p className="mt-4">
+          Edita <code>src/App.jsx</code> y guarda para probar HMR
         </p>
       </div>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        Haz click en los logos de Vite y React para aprender más
       </p>
-    </>
+    </div>
   )
 }
 
