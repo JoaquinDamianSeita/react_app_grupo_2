@@ -45,8 +45,7 @@ export default function Login() {
         localStorage.setItem('accessToken', data.accessToken)
         localStorage.setItem('tokenExpiration', data.expiresIn)
         
-        alert('Login exitoso!')
-        navigate('/')
+        navigate('/profile')
       } catch (err) {
         setError('Error al iniciar sesión: ' + err.message)
         setShowError(true)
