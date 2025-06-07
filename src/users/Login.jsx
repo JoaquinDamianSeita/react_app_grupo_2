@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import Snackbar from './utils/Snackbar'
+import Snackbar from '../utils/Snackbar'
 
 export default function Login() {
     const [error, setError] = useState('')
@@ -173,4 +173,4 @@ export default function Login() {
         />
       </>
     )
-  }
+  } 
