@@ -132,7 +132,7 @@ export default function Login() {
                   <div>
                     <button
                       type="submit"
-                      className="flex w-full justify-center rounded-md bg-cyan-600 px-4 py-2 text-lg font-semibold text-white hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+                      className="flex w-full justify-center rounded-md bg-cyan-600 px-4 py-2 text-lg font-semibold text-white hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
                     >
                       Ingresar
                     </button>
