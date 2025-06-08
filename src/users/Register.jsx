@@ -271,8 +271,8 @@ export default function Register() {
       
       return `${baseClassName} ${
         hasError 
-          ? 'bg-red-50 outline-red-500 outline-1 -outline-offset-1 focus:outline-2 focus:-outline-offset-2 focus:outline-red-500' 
-          : 'bg-white outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600'
+          ? 'bg-red-50 outline-red-500 outline-1 -outline-offset-1 focus:outline-2 focus:-outline-offset-2 focus:outline-cyan-600' 
+          : 'bg-white outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-cyan-600'
       } placeholder:text-gray-400`
     }
 
@@ -282,70 +282,58 @@ export default function Register() {
           return (
             <div className="space-y-6">
               <div>
-                <label htmlFor="firstName" className="block text-lg font-medium text-gray-900">
-                  Nombre
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    required
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className={getInputClassName('firstName')}
-                  />
-                  {validationErrors.firstName && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {validationErrors.firstName}
-                    </p>
-                  )}
-                </div>
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  required
+                  placeholder="Nombre"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  className={getInputClassName('firstName')}
+                />
+                {validationErrors.firstName && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.firstName}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label htmlFor="lastName" className="block text-lg font-medium text-gray-900">
-                  Apellido
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    required
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className={getInputClassName('lastName')}
-                  />
-                  {validationErrors.lastName && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {validationErrors.lastName}
-                    </p>
-                  )}
-                </div>
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  required
+                  placeholder="Apellido"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  className={getInputClassName('lastName')}
+                />
+                {validationErrors.lastName && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.lastName}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-lg font-medium text-gray-900">
-                  Email
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    autoComplete="email"
-                    className={getInputClassName('email')}
-                  />
-                  {validationErrors.email && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {validationErrors.email}
-                    </p>
-                  )}
-                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  autoComplete="email"
+                  className={getInputClassName('email')}
+                />
+                {validationErrors.email && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.email}
+                  </p>
+                )}
               </div>
             </div>
           )
@@ -353,38 +341,32 @@ export default function Register() {
           return (
             <div className="space-y-6">
               <div>
-                <label htmlFor="username" className="block text-lg font-medium text-gray-900">
-                  Usuario
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="username"
-                    name="username"
-                    type="text"
-                    required
-                    value={formData.username}
-                    onChange={handleInputChange}
-                    autoComplete="username"
-                    className={getInputClassName('username')}
-                  />
-                  {validationErrors.username && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {validationErrors.username}
-                    </p>
-                  )}
-                </div>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  required
+                  placeholder="Usuario"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  autoComplete="username"
+                  className={getInputClassName('username')}
+                />
+                {validationErrors.username && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.username}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-lg font-medium text-gray-900">
-                  Contraseña
-                </label>
-                <div className="mt-2 relative">
+                <div className="relative">
                   <input
                     id="password"
                     name="password"
                     type={showPassword ? "text" : "password"}
                     required
+                    placeholder="Contraseña"
                     value={formData.password}
                     onChange={handleInputChange}
                     autoComplete="new-password"
@@ -406,24 +388,22 @@ export default function Register() {
                       </svg>
                     )}
                   </button>
-                  {validationErrors.password && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {validationErrors.password}
-                    </p>
-                  )}
                 </div>
+                {validationErrors.password && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.password}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-lg font-medium text-gray-900">
-                  Confirmar Contraseña
-                </label>
-                <div className="mt-2 relative">
+                <div className="relative">
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     required
+                    placeholder="Confirmar Contraseña"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     autoComplete="new-password"
@@ -445,12 +425,12 @@ export default function Register() {
                       </svg>
                     )}
                   </button>
-                  {validationErrors.confirmPassword && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {validationErrors.confirmPassword}
-                    </p>
-                  )}
                 </div>
+                {validationErrors.confirmPassword && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.confirmPassword}
+                  </p>
+                )}
               </div>
             </div>
           )
@@ -458,72 +438,59 @@ export default function Register() {
           return (
             <div className="space-y-6">
               <div>
-                <label htmlFor="address" className="block text-lg font-medium text-gray-900">
-                  Dirección
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="address"
-                    name="address"
-                    type="text"
-                    required
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className={getInputClassName('address')}
-                  />
-                  {validationErrors.address && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {validationErrors.address}
-                    </p>
-                  )}
-                </div>
+                <input
+                  id="address"
+                  name="address"
+                  type="text"
+                  required
+                  placeholder="Dirección"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  className={getInputClassName('address')}
+                />
+                {validationErrors.address && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.address}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label htmlFor="biography" className="block text-lg font-medium text-gray-900">
-                  Biografía
-                </label>
-                <div className="mt-2">
-                  <textarea
-                    id="biography"
-                    name="biography"
-                    required
-                    rows={3}
-                    value={formData.biography}
-                    onChange={handleInputChange}
-                    className={getInputClassName('biography')}
-                  />
-                  {validationErrors.biography && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {validationErrors.biography}
-                    </p>
-                  )}
-                </div>
+                <textarea
+                  id="biography"
+                  name="biography"
+                  required
+                  placeholder="Biografía"
+                  rows={3}
+                  value={formData.biography}
+                  onChange={handleInputChange}
+                  className={getInputClassName('biography')}
+                />
+                {validationErrors.biography && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.biography}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label htmlFor="roleId" className="block text-lg font-medium text-gray-900">
-                  Tipo de Usuario
-                </label>
-                <div className="mt-2">
-                  <select
-                    id="roleId"
-                    name="roleId"
-                    required
-                    value={formData.roleId}
-                    onChange={handleInputChange}
-                    className={getInputClassName('roleId')}
-                  >
-                    <option value="">Selecciona un rol</option>
-                    <option value="1">Comprador</option>
-                    <option value="2">Artista</option>
-                  </select>
-                  {validationErrors.roleId && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {validationErrors.roleId}
-                    </p>
-                  )}
-                </div>
+                <select
+                  id="roleId"
+                  name="roleId"
+                  required
+                  value={formData.roleId}
+                  onChange={handleInputChange}
+                  className={getInputClassName('roleId')}
+                >
+                  <option value="">Selecciona un rol</option>
+                  <option value="1">Comprador</option>
+                  <option value="2">Artista</option>
+                </select>
+                {validationErrors.roleId && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.roleId}
+                  </p>
+                )}
               </div>
             </div>
           )
@@ -534,7 +501,7 @@ export default function Register() {
 
     return (
       <>
-        <div className="flex min-h-screen">
+        <div className="flex h-screen">
           {/* Imagen lado izquierdo */}
           <div className="hidden lg:block lg:w-1/2">
             <img
@@ -545,21 +512,22 @@ export default function Register() {
           </div>
 
           {/* Formulario lado derecho */}
-          <div className="flex w-full lg:w-1/2 flex-col justify-start px-6 py-12 lg:px-20">
-            <div className="w-full max-w-sm mx-auto">
-              <div>
+          <div className="flex w-full lg:w-1/2 flex-col justify-center px-6 lg:px-20 bg-gray-50">
+            <div className="w-full max-w-xl max-h-xl mx-auto -mt-20 bg-white p-20 rounded-lg shadow-sm">
+              <div className="flex items-center justify-center mb-6">
                 <img
                   alt="Tu Empresa"
-                  src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                  className="h-12 w-auto"
+                  src="/images/icon.svg"
+                  className="h-12"
                 />
-                <h2 className="mt-8 text-4xl font-bold tracking-tight text-gray-900">
-                  Registro
-                </h2>
-                <p className="mt-2 text-xl text-gray-600">
-                  Paso {currentStep} de 3
-                </p>
+                <span className="ml-3 font-reem text-[40px] leading-[30px] tracking-[0.5px] font-semibold text-gray-900">Mint & Frame</span>
               </div>
+              <h2 className="mt-12 text-3xl font-bold tracking-tight text-gray-900">
+                Registro
+              </h2>
+              <p className="mt-2 text-xl font-semibold text-gray-600">
+                Paso {currentStep} de 3
+              </p>
     
               <div className="mt-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -580,14 +548,14 @@ export default function Register() {
                       <button
                         type="button"
                         onClick={handleNext}
-                        className="flex w-full justify-center rounded-md bg-gray-900 px-4 py-2 text-lg font-semibold text-white hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+                        className="flex w-full justify-center rounded-md bg-cyan-600 px-4 py-2 text-lg font-semibold text-white hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
                       >
                         Siguiente
                       </button>
                     ) : (
                       <button
                         type="submit"
-                        className="flex w-full justify-center rounded-md bg-gray-900 px-4 py-2 text-lg font-semibold text-white hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+                        className="flex w-full justify-center rounded-md bg-cyan-600 px-4 py-2 text-lg font-semibold text-white hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
                       >
                         Registrarse
                       </button>
@@ -595,10 +563,13 @@ export default function Register() {
                   </div>
                 </form>
 
-                <div className="mt-6">
-                  <Link to="/login" className="text-lg font-semibold text-gray-900 hover:text-gray-700">
-                    ← Volver al login
-                  </Link>
+                <div className="mt-8 border-t border-gray-200 pt-6">
+                  <p className="text-lg text-gray-600">
+                    ¿Ya tenés una cuenta?{' '}
+                    <Link to="/login" className="text-lg font-semibold text-gray-900 hover:text-gray-700">
+                      Ingresá aquí
+                    </Link>
+                  </p>
                 </div>
               </div>
             </div>
