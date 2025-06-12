@@ -76,7 +76,7 @@ const Navbar = () => {
             <Link to="/" className="text-gray-600 hover:text-gray-900 font-medium">
               Inicio
             </Link>
-            <Link to="/categories" className="text-gray-600 hover:text-gray-900 font-medium">
+            <Link to="/products" className="text-gray-600 hover:text-gray-900 font-medium">
               Categorías
             </Link>
             <Link to="/profile" className="text-gray-600 hover:text-gray-900 font-medium">
@@ -125,14 +125,12 @@ const Navbar = () => {
 
           {/* Right side - Search, Cart, and Logout */}
           <div className="flex items-center space-x-4">
-            <button
+            <Link
+              to="/products"
               className="text-gray-600 hover:text-gray-900 p-2 rounded-full hover:bg-gray-100 flex items-center justify-center"
-              onClick={() => {
-                // TODO: Implement search functionality
-              }}
             >
               <img src="/images/lupa.svg" alt="Search" className="h-5 w-5" style={{ minWidth: '20px' }} />
-            </button>
+            </Link>
             <Link 
               to="/cart"
               className="text-gray-600 hover:text-gray-900 p-2 rounded-full hover:bg-gray-100 flex items-center justify-center"
