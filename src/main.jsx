@@ -5,6 +5,7 @@ import App from './App.jsx'
 import Login from './users/Login.jsx'
 import Register from './users/Register.jsx'
 import Profile from './users/Profile.jsx'
+import Products from './products/Products.jsx'
 import NotFound from './components/errors/NotFound.jsx'
 import './index.css'
 
@@ -16,6 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/products" element={<Products />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
