@@ -8,9 +8,10 @@ import Profile from './users/Profile';
 import SalesHistory from './components/SalesHistory';
 import CreateNft from './nfts/CreateNft';
 import EditNft from './nfts/EditNft';
+import ShowNft from './nfts/ShowNft';
+import Login from './users/Login.jsx';
 import ShowCart from './carts/Show.jsx'
 import Checkout from './carts/Checkout.jsx';
-import Login from './users/Login.jsx';
 import Register from './users/Register.jsx';
 import { authService } from './services/authService';
 
@@ -76,6 +77,18 @@ function App() {
           }
         />
 
+        {/* Ruta para mostrar un NFT específico */}
+        <Route
+          path="/nfts/:id"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <ShowNft />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+
         {/* Otras rutas con Navbar */}
         <Route
           path="/categories"
@@ -134,7 +147,7 @@ function App() {
           element={
             <ProtectedRoute>
               <LayoutWithNavbar>
-                <ShowCart />
+              <ShowCart />
               </LayoutWithNavbar>
             </ProtectedRoute>
           }

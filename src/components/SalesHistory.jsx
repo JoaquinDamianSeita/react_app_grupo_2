@@ -18,8 +18,7 @@ const SalesHistory = () => {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        },
-        credentials: 'include'
+        }
       });
 
       if (!response.ok) {
@@ -59,7 +58,7 @@ const SalesHistory = () => {
 
         const data = await response.json();
         setUserRole(data.roleName);
-        
+
         // Fetch sales data after getting user role
         await fetchSales(token);
       } catch (err) {
@@ -162,5 +161,4 @@ const SalesHistory = () => {
     </div>
   );
 };
-
-export default SalesHistory; 
+export default SalesHistory;

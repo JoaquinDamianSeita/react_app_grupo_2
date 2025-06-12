@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AddToCartButton } from './cart/AddToCartButton';
 
 export default function Home() {
     const [nfts, setNfts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchNfts = async () => {
@@ -40,6 +42,14 @@ export default function Home() {
         return nft.imageUrls;
     };
 
+    const handleNFTClick = (nftId, event) => {
+        // Evitar navegación si el click fue en el botón de agregar al carrito
+        if (event.target.closest('.cart-button')) {
+            return;
+        }
+        navigate(`/nfts/${nftId}`);
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-cyan-600 flex items-center justify-center">
@@ -67,7 +77,8 @@ export default function Home() {
                 {nfts.map((nft) => (
                     <div
                         key={nft.id}
-                        className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center"
+                        className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center cursor-pointer transform transition-transform duration-200 hover:scale-105"
+                        onClick={(e) => handleNFTClick(nft.id, e)}
                     >
                         <div className="w-full h-48 relative">
                             <img 
@@ -82,7 +93,7 @@ export default function Home() {
                             <p className="text-lg text-gray-700 font-semibold mt-2 text-center">
                                 ${typeof nft.price === 'number' ? nft.price.toFixed(2) : nft.price}
                             </p>
-                            <div className="mt-4">
+                            <div className="mt-4 cart-button">
                                 <AddToCartButton nftId={nft.id} />
                             </div>
                         </div>
