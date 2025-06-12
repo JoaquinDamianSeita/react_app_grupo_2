@@ -21,11 +21,12 @@ export default function CreateNFT() {
         };
 
         try {
+            const accessToken = localStorage.getItem('accessToken');
             const response = await fetch('http://localhost:8080/api/nfts', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
-                    // Authorization: `Bearer ${token}` si usás JWT
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
                 },
                 body: JSON.stringify(nftData)
             });

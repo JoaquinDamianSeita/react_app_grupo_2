@@ -7,8 +7,11 @@ import Profile from './users/Profile';
 import SalesHistory from './components/SalesHistory';
 import CreateNft from './nfts/CreateNft';
 import EditNft from './nfts/EditNft';
-import Cart from './carts/Cart';
+import ShowNft from './nfts/ShowNft';
 import Login from './users/Login.jsx';
+import ShowCart from './carts/Show.jsx'
+import Checkout from './carts/Checkout.jsx';
+import Register from './users/Register.jsx';
 import { authService } from './services/authService';
 
 // Componente para rutas protegidas
@@ -47,6 +50,7 @@ function App() {
       <Routes>
         {/* Rutas públicas sin Navbar */}
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         {/* Ruta raíz redirige a login si no está autenticado */}
         <Route
@@ -55,6 +59,18 @@ function App() {
             <ProtectedRoute>
               <LayoutWithNavbar>
                 <Home />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ruta para mostrar un NFT específico */}
+        <Route
+          path="/nfts/:id"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <ShowNft />
               </LayoutWithNavbar>
             </ProtectedRoute>
           }
@@ -118,7 +134,17 @@ function App() {
           element={
             <ProtectedRoute>
               <LayoutWithNavbar>
-                <Cart />
+              <ShowCart />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart/checkout/:cartId"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <Checkout />
               </LayoutWithNavbar>
             </ProtectedRoute>
           }

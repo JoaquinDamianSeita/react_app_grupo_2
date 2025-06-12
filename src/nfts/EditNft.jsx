@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { authService } from '../services/authService';
+
+const API_BASE_URL = 'http://localhost:8080';
 
 export default function EditNFT() {
     const [nfts, setNfts] = useState([]);
@@ -12,16 +15,40 @@ export default function EditNFT() {
     const [physicalPieces, setPhysicalPieces] = useState('');
     const [available, setAvailable] = useState(true);
 
-    const currentUserId = 3; // Simulamos usuario logueado
-
     useEffect(() => {
         async function fetchNFTs() {
-            const res = await fetch('http://localhost:8080/api/nfts');
-            const data = await res.json();
-            console.log(data);
-            const userNfts = data.filter(nft => nft.userId === currentUserId);
-            console.log(userNfts);
-            setNfts(userNfts);
+            try {
+                const token = authService.getToken();
+                if (!token) {
+                    console.error('No access token found');
+                    return;
+                }
+
+                // Primero obtenemos los datos del usuario
+                const userResponse = await fetch(`${API_BASE_URL}/api/users/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!userResponse.ok) {
+                    throw new Error('Error al obtener datos del usuario');
+                }
+
+                const userData = await userResponse.json();
+                const currentUserId = userData.userId;
+
+                // Luego obtenemos los NFTs
+                const nftsResponse = await fetch(`${API_BASE_URL}/api/nfts`);
+                const nftsData = await nftsResponse.json();
+                
+                // Filtramos por el userId obtenido del endpoint /me
+                const userNfts = nftsData.filter(nft => nft.userId === currentUserId);
+                setNfts(userNfts);
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
 
         fetchNFTs();
@@ -53,11 +80,12 @@ export default function EditNFT() {
         };
 
         try {
+            const accessToken = localStorage.getItem('accessToken');
             const response = await fetch(`http://localhost:8080/api/nfts/${selectedId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb3NlR2FyY2lhIiwicm9sZSI6IkFSVElTVCIsImlhdCI6MTc0OTcwNDM1MCwiZXhwIjoxNzQ5NzIyMzUwfQ.O--siTKulChmz8ELQ0QxpjcugDNAxxs9eKa0ng77MxM`
+                    'Authorization': `Bearer ${accessToken}`
                 },
                 body: JSON.stringify(nftData)
             });
@@ -81,10 +109,11 @@ export default function EditNFT() {
         if (!confirmDelete) return;
 
         try {
+            const accessToken = localStorage.getItem('accessToken');
             const response = await fetch(`http://localhost:8080/api/nfts/${selectedId}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb3NlR2FyY2lhIiwicm9sZSI6IkFSVElTVCIsImlhdCI6MTc0OTcwNDM1MCwiZXhwIjoxNzQ5NzIyMzUwfQ.O--siTKulChmz8ELQ0QxpjcugDNAxxs9eKa0ng77MxM`
+                    'Authorization': `Bearer ${accessToken}`
                 }
             });
 
@@ -128,7 +157,7 @@ export default function EditNFT() {
                     }{
                     !selectedId && (
                         <img
-                            src="/images/NFT.jpg"
+                            src="/images/nftCreateEdit.jpg"
                             alt="NFT"
                             className="rounded-xl w-full h-full object-cover"
                         />

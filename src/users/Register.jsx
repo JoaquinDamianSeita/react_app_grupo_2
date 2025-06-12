@@ -502,32 +502,35 @@ export default function Register() {
     }
 
     return (
-      <>
-        <div className="flex h-screen">
+      <div className="min-h-screen bg-gray-50">
+        <div className="flex min-h-screen">
           {/* Imagen lado izquierdo */}
-          <div className="hidden lg:block lg:w-1/2">
+          <div className="hidden lg:block lg:w-1/2 relative">
             <img
               src="/images/bored-ape-yacht-club.jpg"
               alt="Bored Ape NFTs"
-              className="h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
 
           {/* Formulario lado derecho */}
-          <div className="flex w-full lg:w-1/2 flex-col justify-center px-6 lg:px-20 bg-gray-50">
-            <div className="w-full max-w-xl max-h-xl mx-auto -mt-20 bg-white p-20 rounded-lg shadow-sm">
+          <div className="flex w-full lg:w-1/2 flex-col justify-center px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-lg mx-auto bg-white p-8 sm:p-12 rounded-xl shadow-sm">
               <div className="flex items-center justify-center mb-6">
                 <img
                   alt="Tu Empresa"
                   src="/images/icon.svg"
-                  className="h-12"
+                  className="h-10 sm:h-12"
                 />
-                <span className="ml-3 font-reem text-[40px] leading-[30px] tracking-[0.5px] font-semibold text-gray-900">Mint & Frame</span>
+                <span className="ml-3 font-reem text-3xl sm:text-[40px] leading-[30px] tracking-[0.5px] font-semibold text-gray-900">
+                  Mint & Frame
+                </span>
               </div>
-              <h2 className="mt-12 text-3xl font-bold tracking-tight text-gray-900">
+              
+              <h2 className="mt-6 text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
                 Registro
               </h2>
-              <p className="mt-2 text-xl font-semibold text-gray-600">
+              <p className="mt-2 text-lg sm:text-xl font-semibold text-gray-600">
                 Paso {currentStep} de 3
               </p>
     
@@ -540,7 +543,7 @@ export default function Register() {
                       <button
                         type="button"
                         onClick={handleBack}
-                        className="flex w-full justify-center rounded-md bg-gray-100 px-4 py-2 text-lg font-semibold text-gray-900 hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+                        className="flex w-full justify-center rounded-md bg-gray-100 px-4 py-2 text-base sm:text-lg font-semibold text-gray-900 hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
                       >
                         Anterior
                       </button>
@@ -550,14 +553,14 @@ export default function Register() {
                       <button
                         type="button"
                         onClick={handleNext}
-                        className="flex w-full justify-center rounded-md bg-cyan-600 px-4 py-2 text-lg font-semibold text-white hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+                        className="flex w-full justify-center rounded-md bg-cyan-600 px-4 py-2 text-base sm:text-lg font-semibold text-white hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
                       >
                         Siguiente
                       </button>
                     ) : (
                       <button
                         type="submit"
-                        className="flex w-full justify-center rounded-md bg-cyan-600 px-4 py-2 text-lg font-semibold text-white hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+                        className="flex w-full justify-center rounded-md bg-cyan-600 px-4 py-2 text-base sm:text-lg font-semibold text-white hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
                       >
                         Registrarse
                       </button>
@@ -566,9 +569,9 @@ export default function Register() {
                 </form>
 
                 <div className="mt-8 border-t border-gray-200 pt-6">
-                  <p className="text-lg text-gray-600">
+                  <p className="text-base sm:text-lg text-gray-600">
                     ¿Ya tenés una cuenta?{' '}
-                    <Link to="/login" className="text-lg font-semibold text-gray-900 hover:text-gray-700">
+                    <Link to="/login" className="text-base sm:text-lg font-semibold text-gray-900 hover:text-gray-700">
                       Ingresá aquí
                     </Link>
                   </p>
@@ -592,6 +595,6 @@ export default function Register() {
           variant="success"
           position="bottom-right"
         />
-      </>
+      </div>
     )
   }

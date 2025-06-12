@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-export default function ShowNFT({ nftId }) {
+export default function ShowNFT() {
+    const { id } = useParams();
     const [nft, setNft] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
@@ -8,11 +10,14 @@ export default function ShowNFT({ nftId }) {
         const fetchNFT = async () => {
             try {
                 const accessToken = localStorage.getItem('accessToken');
-                const response = await fetch(`http://localhost:8080/api/nfts/${nftId}`, {
+                const response = await fetch(`http://localhost:8080/api/nfts/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
                 });
+                if (!response.ok) {
+                    throw new Error('Error al cargar el NFT');
+                }
                 const data = await response.json();
                 setNft(data);
             } catch (error) {
@@ -20,10 +25,16 @@ export default function ShowNFT({ nftId }) {
             }
         };
 
-        fetchNFT();
-    }, [nftId]);
+        if (id) {
+            fetchNFT();
+        }
+    }, [id]);
 
-    if (!nft) return <div className="text-center mt-10">Cargando...</div>;
+    if (!nft) return (
+        <div className="min-h-screen bg-cyan-700 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+        </div>
+    );
 
     return (
         <div className="bg-cyan-700 min-h-screen flex items-center justify-center">
