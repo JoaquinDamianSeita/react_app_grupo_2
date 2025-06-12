@@ -105,6 +105,13 @@ export default function ShowCart({ cartId }) {
     const handleDeleteCart = async () => {
         try {
             const token = localStorage.getItem('accessToken');
+            const id = cartId || localStorage.getItem('cartId');
+
+            if (!id) {
+                alert('No hay carrito para eliminar');
+                return;
+            }
+
             const response = await fetch(`http://localhost:8080/api/cart/${cartId}`, {
                 method: 'DELETE',
                 headers: {
@@ -112,10 +119,15 @@ export default function ShowCart({ cartId }) {
                 }
             });
             if (!response.ok) throw new Error('Error al eliminar el carrito.');
+
+            // Limpia el localStorage
+            localStorage.removeItem('cartId');
+
             alert('Carrito eliminado correctamente.');
-            navigate('/home');
+            navigate('/');
         } catch (error) {
             alert(error.message);
+            console.error("Error al eliminar el carrito:", error);
         }
     }
 
