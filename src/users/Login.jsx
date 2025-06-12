@@ -1,11 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import Snackbar from '../utils/Snackbar'
+import { authService } from '../services/authService'
 
 export default function Login() {
     const [error, setError] = useState('')
     const [showError, setShowError] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
 
     const handleCloseError = () => {
@@ -20,7 +22,7 @@ export default function Login() {
     const handleSubmit = async (e) => {
       e.preventDefault()
       setError('')
-      setShowError(false)
+      setIsLoading(true)
 
       const formData = new FormData(e.target)
       const credentials = {
@@ -29,26 +31,16 @@ export default function Login() {
       }
 
       try {
-        const response = await fetch('http://localhost:8080/api/users/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(credentials)
-        })
-
-        if (!response.ok) {
-          throw new Error('Credenciales inválidas')
-        }
-
-        const data = await response.json()
-        localStorage.setItem('accessToken', data.accessToken)
-        localStorage.setItem('tokenExpiration', data.expiresIn)
-        
+        console.log('Iniciando proceso de login...')
+        await authService.login(credentials.username, credentials.password)
+        console.log('Login exitoso, redirigiendo...')
         navigate('/profile')
       } catch (err) {
-        setError('Error al iniciar sesión: ' + err.message)
+        console.error('Error en el proceso de login:', err)
+        setError(err.message || 'Error al iniciar sesión. Por favor, intenta de nuevo.')
         setShowError(true)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -98,6 +90,7 @@ export default function Login() {
                       placeholder="Usuario"
                       autoComplete="username"
                       className={inputClassName}
+                      disabled={isLoading}
                     />
                   </div>
     
@@ -110,11 +103,13 @@ export default function Login() {
                       placeholder="Contraseña"
                       autoComplete="current-password"
                       className={inputClassName}
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
                       onClick={togglePasswordVisibility}
                       className="absolute inset-y-0 right-0 flex items-center pr-3"
+                      disabled={isLoading}
                     >
                       {showPassword ? (
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-500 hover:text-gray-700">
@@ -133,8 +128,9 @@ export default function Login() {
                     <button
                       type="submit"
                       className="flex w-full justify-center rounded-md bg-cyan-600 px-4 py-2 text-lg font-semibold text-white hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+                      disabled={isLoading}
                     >
-                      Ingresar
+                      {isLoading ? 'Ingresando...' : 'Ingresar'}
                     </button>
                   </div>
                 </form>
