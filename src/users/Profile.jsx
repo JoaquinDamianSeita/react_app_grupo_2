@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Snackbar from '../utils/Snackbar'
+import { authService } from '../services/authService'
+import React from 'react';
+
+const API_BASE_URL = 'http://localhost:8080';
 
 export default function Profile() {
   const [userData, setUserData] = useState(null)
@@ -14,7 +18,7 @@ export default function Profile() {
     email: '',
     address: '',
     biography: '',
-    roleId: ''
+    roleName: ''
   })
   const [validationErrors, setValidationErrors] = useState({
     firstName: '',
@@ -22,7 +26,7 @@ export default function Profile() {
     email: '',
     address: '',
     biography: '',
-    roleId: ''
+    roleName: ''
   })
   const navigate = useNavigate()
 
@@ -66,40 +70,46 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem('accessToken')
-      
-      if (!token) {
-        navigate('/login')
-        return
-      }
-
       try {
-        const response = await fetch('http://localhost:8080/api/users/me', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
-
-        if (!response.ok) {
-          throw new Error('No se pudo obtener la información del usuario')
+        setLoading(true);
+        const token = authService.getToken();
+        
+        if (!token) {
+          navigate('/login');
+          return;
         }
 
-        const data = await response.json()
-        setUserData(data)
+        console.log('Obteniendo datos del usuario...');
+        const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error al obtener perfil: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setUserData(data);
         setFormData({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          address: data.address,
+          firstName: data.firstName || '',
+          lastName: data.lastName || '',
+          email: data.email || '',
+          address: data.address || '',
           biography: data.biography || '',
-          roleId: data.roleId
-        })
+          roleName: data.roleName || ''
+        });
       } catch (err) {
-        setError(err.message)
+        console.error('Error completo al obtener perfil:', err);
+        setError(err.message || 'Error al cargar los datos del usuario');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     fetchUserData()
   }, [navigate])
@@ -140,16 +150,17 @@ export default function Profile() {
       return
     }
 
-    const token = localStorage.getItem('accessToken')
-    if (!token) {
+    const token = authService.getToken()
+    if (!token || !authService.isAuthenticated()) {
       navigate('/login')
       return
     }
 
     try {
-      const response = await fetch('http://localhost:8080/api/users/update', {
+      const response = await fetch(`${API_BASE_URL}/api/users/update`, {
         method: 'PUT',
         headers: {
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
@@ -159,6 +170,11 @@ export default function Profile() {
       const data = await response.json()
 
       if (!response.ok) {
+        if (response.status === 401) {
+          authService.logout()
+          navigate('/login')
+          throw new Error('Sesión expirada. Por favor, inicie sesión nuevamente.')
+        }
         if (data.validation_messages && data.validation_messages.length > 0) {
           throw new Error(data.validation_messages.join(', '))
         }
@@ -176,6 +192,9 @@ export default function Profile() {
       setIsEditing(false)
     } catch (err) {
       setError(err.message)
+      if (err.message.includes('Sesión expirada')) {
+        navigate('/login')
+      }
     }
   }
 
@@ -186,7 +205,7 @@ export default function Profile() {
       email: userData.email,
       address: userData.address,
       biography: userData.biography || '',
-      roleId: userData.roleId
+      roleName: userData.roleName
     })
     setValidationErrors({})
     setIsEditing(false)
@@ -248,7 +267,7 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-600">Nombre de Usuario</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                    {userData?.username}
+                    {userData?.username || 'No disponible'}
                   </div>
                 </div>
                 
@@ -272,7 +291,7 @@ export default function Profile() {
                     </div>
                   ) : (
                     <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                      {userData?.email}
+                      {userData?.email || 'No disponible'}
                     </div>
                   )}
                 </div>
@@ -297,7 +316,7 @@ export default function Profile() {
                     </div>
                   ) : (
                     <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                      {userData?.firstName}
+                      {userData?.firstName || 'No disponible'}
                     </div>
                   )}
                 </div>
@@ -322,7 +341,7 @@ export default function Profile() {
                     </div>
                   ) : (
                     <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                      {userData?.lastName}
+                      {userData?.lastName || 'No disponible'}
                     </div>
                   )}
                 </div>
@@ -347,7 +366,7 @@ export default function Profile() {
                     </div>
                   ) : (
                     <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                      {userData?.address}
+                      {userData?.address || 'No disponible'}
                     </div>
                   )}
                 </div>
@@ -355,7 +374,7 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-600">Rol</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                    {userData?.roleName}
+                    {userData?.roleName || 'No disponible'}
                   </div>
                 </div>
               </div>
@@ -373,10 +392,11 @@ export default function Profile() {
                     value={formData.biography}
                     onChange={handleInputChange}
                     className={getInputClassName('biography')}
+                    placeholder="Escribe tu biografía aquí..."
                   />
                 </div>
               ) : (
-                <div className="p-3 bg-gray-50 rounded-md">
+                <div className="p-3 bg-gray-50 rounded-md min-h-[100px]">
                   {userData?.biography || 'No hay biografía disponible'}
                 </div>
               )}
