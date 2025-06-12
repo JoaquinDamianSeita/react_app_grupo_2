@@ -18,8 +18,7 @@ const SalesHistory = () => {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        },
-        credentials: 'include'
+        }
       });
 
       if (!response.ok) {
@@ -50,8 +49,7 @@ const SalesHistory = () => {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
-          },
-          credentials: 'include'
+          }
         });
 
         if (!response.ok) {

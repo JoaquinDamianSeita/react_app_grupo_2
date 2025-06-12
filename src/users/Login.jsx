@@ -34,7 +34,7 @@ export default function Login() {
         console.log('Iniciando proceso de login...')
         await authService.login(credentials.username, credentials.password)
         console.log('Login exitoso, redirigiendo...')
-        navigate('/profile')
+        navigate('/')
       } catch (err) {
         console.error('Error en el proceso de login:', err)
         setError(err.message || 'Error al iniciar sesión. Por favor, intenta de nuevo.')
