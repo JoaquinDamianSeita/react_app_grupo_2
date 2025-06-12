@@ -16,7 +16,8 @@ export const authService = {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username, password }),
+                credentials: 'include'
             });
 
             console.log('Respuesta completa del servidor:', {
@@ -25,14 +26,7 @@ export const authService = {
             });
 
             if (!response.ok) {
-                const data = await response.json().catch(() => ({}));
-                if (response.status === 401) {
-                    throw new Error('Usuario o contraseña incorrectos');
-                } else if (data.message) {
-                    throw new Error(data.message);
-                } else {
-                    throw new Error('Error en el proceso de login. Por favor, intenta de nuevo.');
-                }
+                throw new Error('Error en el proceso de login');
             }
 
             const data = await response.json();
@@ -64,7 +58,8 @@ export const authService = {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
-                        }
+                        },
+                        credentials: 'include'
                     });
                 } catch (error) {
                     console.warn('Error al hacer logout en el servidor:', error);

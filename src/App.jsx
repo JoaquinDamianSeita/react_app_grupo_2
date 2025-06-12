@@ -7,10 +7,8 @@ import Profile from './users/Profile';
 import SalesHistory from './components/SalesHistory';
 import CreateNft from './nfts/CreateNft';
 import EditNft from './nfts/EditNft';
-import ShowCart from './carts/Show.jsx'
-import Checkout from './carts/Checkout.jsx';
+import Cart from './carts/Cart';
 import Login from './users/Login.jsx';
-import Register from './users/Register.jsx';
 import { authService } from './services/authService';
 
 // Componente para rutas protegidas
@@ -49,7 +47,6 @@ function App() {
       <Routes>
         {/* Rutas públicas sin Navbar */}
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
 
         {/* Ruta raíz redirige a login si no está autenticado */}
         <Route
@@ -121,17 +118,7 @@ function App() {
           element={
             <ProtectedRoute>
               <LayoutWithNavbar>
-                <ShowCart />
-              </LayoutWithNavbar>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cart/checkout/:cartId"
-          element={
-            <ProtectedRoute>
-              <LayoutWithNavbar>
-                <Checkout />
+                <Cart />
               </LayoutWithNavbar>
             </ProtectedRoute>
           }

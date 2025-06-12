@@ -1,14 +1,136 @@
-import React from 'react';
 
-const CreateNft = () => {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Crear Nuevo NFT</h1>
-      <div className="bg-white shadow rounded-lg p-6">
-        {/* Aquí irá el formulario para crear NFTs */}
-      </div>
-    </div>
-  );
-};
+import React, { useState } from 'react';
 
-export default CreateNft;
+export default function CreateNFT() {
+    const [artType, setArtType] = useState('FISICO');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [price, setPrice] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
+    const [physicalPieces, setPhysicalPieces] = useState('');
+
+    const handleCreate = async () => {
+        const nftData = {
+            title,
+            description,
+            price: parseFloat(price),
+            artType,
+            physicalPieces: parseInt(physicalPieces),
+            available: true,
+            imageUrls: [imageUrl]
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/nfts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // Authorization: `Bearer ${token}` si usás JWT
+                },
+                body: JSON.stringify(nftData)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert('NFT creado con éxito');
+                console.log(result);
+            } else {
+                const errorText = await response.text();
+                alert('Error: ' + errorText);
+            }
+        } catch (err) {
+            alert('Error al conectar con el servidor');
+            console.error(err);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-cyan-700 flex items-center justify-center">
+            <div className="flex gap-8 max-w-7xl mx-auto">
+                {/* Imagen */}
+                <div className="bg-white p-4 rounded-xl shadow w-730px] h-[764px]">
+                    <img
+                        src="/images/nftCreateEdit.jpg"
+                        alt="NFT"
+                        className="rounded-xl w-full h-full object-cover"
+                    />
+                </div>
+
+                {/* Formulario */}
+                <div className="bg-white p-6 rounded-xl shadow w-full" style={{ maxWidth: '720px' }}>
+                    <h2 className="text-2xl font-semibold mb-6">Creá tu NFT completando el formulario</h2>
+
+                    <div className="flex gap-4 mb-4">
+                        <input
+                            type="text"
+                            placeholder="Nombre"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className="w-1/2 border border-cyan-700 rounded px-4 py-8"
+                        />
+                        <input
+                            type="number"
+                            placeholder="Precio"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            className="w-1/2 border border-cyan-700 rounded px-4 py-8"
+                        />
+                    </div>
+
+                    <textarea
+                        placeholder="Descripción"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="w-full border border-cyan-700 rounded px-4 py-24 mb-4"
+                    />
+
+                    <div className="flex gap-6 mb-4">
+                        <div className="flex flex-col flex-1 gap-8">
+                            <input
+                                type="text"
+                                placeholder="Ingrese la URL de su Imagen"
+                                value={imageUrl}
+                                onChange={(e) => setImageUrl(e.target.value)}
+                                className="border border-cyan-700 rounded px-8 py-4"
+                            />
+                            <input
+                                type="number"
+                                placeholder="Cantidad de piezas físicas"
+                                value={physicalPieces}
+                                onChange={(e) => setPhysicalPieces(e.target.value)}
+                                className="border border-cyan-700 rounded px-8 py-4"
+                            />
+                        </div>
+
+                        <div className="flex-1 ml-10">
+                            <p className="text-xl font-semibold mb-8">Tipo de arte:</p>
+                            <div className="flex gap-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setArtType('FISICO')}
+                                    className={`px-6 py-4 rounded ${artType === 'FISICO' ? 'bg-cyan-700 text-white font-bold' : 'bg-cyan-700 text-white'}`}
+                                >
+                                    Físico
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setArtType('DIGITAL')}
+                                    className={`px-6 py-4 rounded ${artType === 'DIGITAL' ? 'bg-cyan-700 text-white font-bold' : 'bg-cyan-700 text-white'}`}
+                                >
+                                    Digital
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={handleCreate}
+                        className="w-full bg-cyan-800 text-white py-4 rounded hover:bg-cyan-900"
+                    >
+                        Crear
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
