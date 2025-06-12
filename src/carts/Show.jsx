@@ -14,7 +14,7 @@ export default function ShowCart({ cartId }) {
             const cartId = localStorage.getItem('cartId');
 
             console.log("CARRITO: " + cartId);
-            
+
             if (!cartId) {
                 setError('No hay carrito activo');
                 return;
@@ -24,7 +24,7 @@ export default function ShowCart({ cartId }) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization':   `Bearer ${token}`
                 }
             });
 
@@ -53,7 +53,7 @@ export default function ShowCart({ cartId }) {
         try {
             const token = localStorage.getItem('accessToken');
             const cartId = localStorage.getItem('cartId');
-            
+
             const response = await fetch(`http://localhost:8080/api/cart/${cartId}/items/${nftId}`, {
                 method: 'DELETE',
                 headers: {
@@ -79,7 +79,7 @@ export default function ShowCart({ cartId }) {
         try {
             const token = localStorage.getItem('accessToken');
             const cartId = localStorage.getItem('cartId');
-            
+
             const response = await fetch(`http://localhost:8080/api/cart/${cartId}/items/${nftId}`, {
                 method: 'PUT',
                 headers: {
@@ -112,12 +112,13 @@ export default function ShowCart({ cartId }) {
                 return;
             }
 
-            const response = await fetch(`http://localhost:8080/api/cart/${cartId}`, {
+            const response = await fetch(`http://localhost:8080/api/cart/${id}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
+
             if (!response.ok) throw new Error('Error al eliminar el carrito.');
 
             // Limpia el localStorage
@@ -129,7 +130,8 @@ export default function ShowCart({ cartId }) {
             alert(error.message);
             console.error("Error al eliminar el carrito:", error);
         }
-    }
+    };
+
 
     const handleCheckout = async () => {
         navigate(`/cart/checkout/${cartId}`);
@@ -143,7 +145,7 @@ export default function ShowCart({ cartId }) {
                 <div className="bg-white rounded-lg shadow-lg w-full max-w-5xl p-10">
                     <h2 className="text-3xl font-bold text-center mb-8">Carrito de Compras</h2>
                     <div className="flex justify-end mb-4">
-                        <button 
+                        <button
                             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
                             onClick={handleDeleteCart}
                         >
@@ -169,13 +171,13 @@ export default function ShowCart({ cartId }) {
                                     )}
                                 </div>
                             ))}
-                            {/*Metodos de pago*/}
+                            {/Metodos de pago/}
                             <div className="flex items-center gap-4 mt-10">
                                 <span className="font-medium">Metodo de pago:</span>
-                                <button 
-                                    className={`px-4 py-1 rounded ${paymentMethod === 'Efectivo' ? 'bg-cyan-500 text-white' : 'bg-white text-cyan-700 border border-cyan-500'}`} 
+                                <button
+                                    className={`px-4 py-1 rounded ${paymentMethod === 'Efectivo' ? 'bg-cyan-500 text-white' : 'bg-white text-cyan-700 border border-cyan-500'}`}
                                     onClick={() => setPaymentMethod('Efectivo')}>Efectivo</button>
-                                <button 
+                                <button
                                     className={`px-4 py-1 rounded ${paymentMethod === 'Tarjeta' ? 'bg-cyan-500 text-white' : 'bg-white text-cyan-700 border border-cyan-500'}`}
                                     onClick={() => setPaymentMethod('Tarjeta')}>Tarjeta</button>
                             </div>
