@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { AddToCartButton } from '../components/cart/AddToCartButton';
 
 export default function ShowNFT() {
     const { id } = useParams();
@@ -76,9 +77,9 @@ export default function ShowNFT() {
                         <span className="text-xl font-bold">${nft.price.toFixed(2)}</span>
                     </div>
 
-                    <button className="w-full bg-cyan-800 text-white py-3 rounded mb-6 hover:bg-cyan-900">
-                        Agregar al carrito
-                    </button>
+                    <div className="mt-4 cart-button">
+                        <AddToCartButton nftId={nft.id} />
+                    </div>
 
                     <div className="border-t pt-4 text-sm">
                         <h2 className="text-lg font-semibold mb-2">Detalle del producto</h2>

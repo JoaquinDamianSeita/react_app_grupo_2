@@ -69,9 +69,7 @@ export default function Products() {
   }
 
   const handleProductClick = (productId) => {
-    // TODO: Implementar navegación al detalle del producto
-    // navigate(`/products/${productId}`)
-    alert(`Navegando al detalle del producto ${productId}`)
+    navigate(`/nfts/${productId}`);
   }
 
   const applyFilters = () => {
