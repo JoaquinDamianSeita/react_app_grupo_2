@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Navbar from './navbar/Navbar';
 import Home from './components/Home';
 import Categories from './components/Categories';
+import Products from './products/Products';
 import Profile from './users/Profile';
 import SalesHistory from './components/SalesHistory';
 import CreateNft from './nfts/CreateNft';
@@ -58,6 +59,18 @@ function App() {
             <ProtectedRoute>
               <LayoutWithNavbar>
                 <Home />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ruta de productos */}
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <Products />
               </LayoutWithNavbar>
             </ProtectedRoute>
           }
