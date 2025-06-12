@@ -9,6 +9,7 @@ import CreateNft from './nfts/CreateNft';
 import EditNft from './nfts/EditNft';
 import Cart from './carts/Cart';
 import Login from './users/Login.jsx';
+import Register from './users/Register.jsx';
 import { authService } from './services/authService';
 
 // Componente para rutas protegidas
@@ -47,6 +48,7 @@ function App() {
       <Routes>
         {/* Rutas públicas sin Navbar */}
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         {/* Ruta raíz redirige a login si no está autenticado */}
         <Route
