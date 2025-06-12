@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import Snackbar from '../utils/Snackbar'
 
+const API_BASE_URL = 'http://localhost:8080';
+
 export default function Register() {
     const [error, setError] = useState('')
     const [showError, setShowError] = useState(false)
@@ -212,7 +214,7 @@ export default function Register() {
       delete userData.confirmPassword
 
       try {
-        const response = await fetch('http://localhost:8080/api/users/register', {
+        const response = await fetch(`${API_BASE_URL}/api/users/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -1,46 +1,131 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom' // <-- Importante
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import Navbar from './navbar/Navbar';
+import Home from './components/Home';
+import Categories from './components/Categories';
+import Profile from './users/Profile';
+import SalesHistory from './components/SalesHistory';
+import CreateNft from './nfts/CreateNft';
+import EditNft from './nfts/EditNft';
+import Cart from './carts/Cart';
+import Login from './users/Login.jsx';
+import { authService } from './services/authService';
+
+// Componente para rutas protegidas
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = authService.isAuthenticated();
+  
+  useEffect(() => {
+    // Verificar autenticación cada vez que se monta el componente
+    if (!isAuthenticated) {
+      console.log('Usuario no autenticado, redirigiendo a login...');
+    }
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+// Componente para el layout con Navbar
+const LayoutWithNavbar = ({ children }) => {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <main className="pt-16">
+        {children}
+      </main>
+    </div>
+  );
+};
 
 function App() {
-  const [count, setCount] = useState(0)
-  const navigate = useNavigate() // <-- Hook para redireccionar
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button 
-          onClick={() => setCount((count) => count + 1)}
-          className="mb-4 w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-        >
-          El contador es {count}
-        </button>
-        <button 
-          onClick={() => navigate('/login')}
-          className="w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-        >
-          Ir al login
-        </button>
-        <p className="mt-4">
-          Edita <code>src/App.jsx</code> y guarda para probar HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Haz click en los logos de Vite y React para aprender más
-      </p>
-    </div>
-  )
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Routes>
+        {/* Rutas públicas sin Navbar */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Ruta raíz redirige a login si no está autenticado */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <Home />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Otras rutas con Navbar */}
+        <Route
+          path="/categories"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <Categories />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Rutas protegidas con Navbar */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <Profile />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sales-history"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <SalesHistory />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-nft"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <CreateNft />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/edit-nft"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <EditNft />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <LayoutWithNavbar>
+                <Cart />
+              </LayoutWithNavbar>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
