@@ -38,6 +38,7 @@ export default function Login() {
       } catch (err) {
         console.error('Error en el proceso de login:', err)
         setError(err.message || 'Error al iniciar sesión. Por favor, intenta de nuevo.')
+        setShowError(true)
       } finally {
         setIsLoading(false)
       }
