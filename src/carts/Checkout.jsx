@@ -23,6 +23,7 @@ export default function Checkout() {
                 throw new Error('No hay carrito activo');
             }
 
+            // 1. Checkout del carrito
             const response = await fetch(`http://localhost:8080/api/cart/checkout/${cartId}`, {
                 method: 'POST',
                 headers: {
@@ -38,9 +39,26 @@ export default function Checkout() {
             }
 
             const data = await response.json();
+
+            // 2. Crear la venta
+            const saleResponse = await fetch('http://localhost:8080/api/sales', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    cartId: data.cartId // Usa el cartId que devuelve el checkout
+                })
+            });
+
+            if (!saleResponse.ok) {
+                const errorData = await saleResponse.json().catch(() => ({}));
+                throw new Error(errorData.message || 'Error al registrar la venta');
+            }
+
+            // Si todo sale bien, muestra el resumen
             setCheckoutData(data);
-            
-            // Limpiar el carrito después del checkout exitoso
             localStorage.removeItem('cartId');
         } catch (error) {
             console.error('Error en el checkout:', error);
