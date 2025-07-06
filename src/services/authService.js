@@ -1,5 +1,3 @@
-const TOKEN_KEY = 'accessToken';
-const TOKEN_EXPIRATION_KEY = 'token_expiration';
 const API_BASE_URL = 'http://localhost:8080';
 const AUTH_ENDPOINTS = {
     LOGIN: `${API_BASE_URL}/api/users/login`,
@@ -8,7 +6,7 @@ const AUTH_ENDPOINTS = {
 };
 
 export const authService = {
-    login: async (username, password) => {
+    login: async (username, password, setTokenCallback) => {
         try {
             console.log('Intentando login con:', { username });
             const response = await fetch(AUTH_ENDPOINTS.LOGIN, {
@@ -38,15 +36,11 @@ export const authService = {
             const data = await response.json();
             console.log('Login exitoso, procesando respuesta...');
             
-            // Guardar token
-            localStorage.setItem(TOKEN_KEY, data.token || data.accessToken || data.jwt);
-            
-            // Establecer expiración
-            const expiration = new Date();
-            expiration.setHours(expiration.getHours() + 1); // Expiración en 1 hora
-            localStorage.setItem(TOKEN_EXPIRATION_KEY, expiration.toISOString());
-            
-            console.log('Token guardado correctamente');
+            // Guardar token en Redux
+            if (setTokenCallback) {
+                setTokenCallback(data.token || data.accessToken || data.jwt);
+            }
+            console.log('Token guardado en Redux correctamente');
             return data;
         } catch (error) {
             console.error('Login error completo:', error);
@@ -54,9 +48,8 @@ export const authService = {
         }
     },
 
-    logout: async () => {
+    logout: async (token) => {
         try {
-            const token = authService.getToken();
             if (token) {
                 try {
                     await fetch(AUTH_ENDPOINTS.LOGOUT, {
@@ -71,39 +64,21 @@ export const authService = {
                 }
             }
         } finally {
-            localStorage.removeItem(TOKEN_KEY);
-            localStorage.removeItem(TOKEN_EXPIRATION_KEY);
             console.log('Sesión cerrada localmente');
         }
     },
 
     getToken: () => {
-        const token = localStorage.getItem(TOKEN_KEY);
-        const expiration = localStorage.getItem(TOKEN_EXPIRATION_KEY);
-        
-        if (!token || !expiration) {
-            console.log('No hay token almacenado');
-            return null;
-        }
-
-        // Verificar expiración
-        const expirationDate = new Date(expiration);
-        if (expirationDate <= new Date()) {
-            console.log('Token expirado');
-            authService.logout();
-            return null;
-        }
-
-        return token;
+        // getToken y logout deben ser adaptados para Redux en los componentes
+        return null;
     },
 
     isAuthenticated: () => {
         return !!authService.getToken();
     },
 
-    getUserProfile: async () => {
+    getUserProfile: async (token) => {
         try {
-            const token = authService.getToken();
             if (!token) {
                 throw new Error('No hay token disponible');
             }

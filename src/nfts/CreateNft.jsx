@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
 
 export default function CreateNFT() {
     const [artType, setArtType] = useState('FISICO');
@@ -9,6 +10,7 @@ export default function CreateNFT() {
     const [price, setPrice] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [physicalPieces, setPhysicalPieces] = useState('');
+    const token = useSelector(state => state.auth.token);
 
     const handleCreate = async () => {
         const nftData = {
@@ -22,12 +24,11 @@ export default function CreateNFT() {
         };
 
         try {
-            const accessToken = localStorage.getItem('accessToken');
             const response = await fetch('http://localhost:8080/api/nfts', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(nftData)
             });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../services/authService';
+import { useSelector } from 'react-redux';
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -10,6 +10,7 @@ const SalesHistory = () => {
   const [error, setError] = useState(null);
   const [sales, setSales] = useState([]);
   const navigate = useNavigate();
+  const token = useSelector(state => state.auth.token);
 
   const fetchSales = async (token) => {
     try {
@@ -38,7 +39,6 @@ const SalesHistory = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = authService.getToken();
         if (!token) {
           navigate('/login');
           return;
@@ -70,7 +70,7 @@ const SalesHistory = () => {
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, [navigate, token]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('es-ES', {

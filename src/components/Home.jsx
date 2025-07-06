@@ -17,7 +17,8 @@ export default function Home() {
 
                 const data = await response.json();
                 console.log('NFTs recibidos:', data); // Para debug
-                setNfts(data);
+                const availableNfts = data.filter(nft => nft.available);
+                setNfts(availableNfts);
             } catch (error) {
                 console.error('Error al cargar NFTs:', error);
                 setError(error.message);

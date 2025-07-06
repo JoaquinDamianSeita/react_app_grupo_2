@@ -1,10 +1,12 @@
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
 
 export function AddToCartButton({ nftId, physicalPieces = 0, onAdded}) {
+    const token = useSelector(state => state.auth.token);
+
     const handleAddToCart = async () => {
         try {
-            const token = localStorage.getItem("accessToken");
             if (!token) {
                 throw new Error("Debes iniciar sesión para agregar al carrito");
             }

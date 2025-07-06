@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearToken } from '../store';
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -8,12 +10,12 @@ const Navbar = () => {
   const [userRole, setUserRole] = useState(null);
   const [showNftDropdown, setShowNftDropdown] = useState(false);
   const navigate = useNavigate();
+  const token = useSelector(state => state.auth.token);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = authService.getToken();
-        
         if (!token) {
           console.log('No token found');
           navigate('/login');
@@ -48,10 +50,11 @@ const Navbar = () => {
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, [navigate, token]);
 
   const handleLogout = () => {
-    authService.logout();
+    authService.logout(token);
+    dispatch(clearToken());
     navigate('/login');
   };
 

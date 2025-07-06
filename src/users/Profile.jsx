@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Snackbar from '../utils/Snackbar'
 import { authService } from '../services/authService'
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -29,6 +30,7 @@ export default function Profile() {
     roleName: ''
   })
   const navigate = useNavigate()
+  const token = useSelector(state => state.auth.token);
 
   const validateField = (name, value) => {
     let error = ''
@@ -72,7 +74,6 @@ export default function Profile() {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const token = authService.getToken();
         
         if (!token) {
           navigate('/login');
@@ -111,7 +112,7 @@ export default function Profile() {
     };
 
     fetchUserData()
-  }, [navigate])
+  }, [navigate, token])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -149,7 +150,6 @@ export default function Profile() {
       return
     }
 
-    const token = authService.getToken()
     if (!token || !authService.isAuthenticated()) {
       navigate('/login')
       return

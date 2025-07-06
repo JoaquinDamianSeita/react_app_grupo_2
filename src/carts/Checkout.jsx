@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function Checkout() {
     const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function Checkout() {
     const [cardExpiry, setCardExpiry] = useState('');
     const [cardCCV, setCardCCV] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
+    const token = useSelector(state => state.auth.token);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -19,7 +21,6 @@ export default function Checkout() {
     const handleCheckout = async () => {
         try {
             setIsProcessing(true);
-            const token = localStorage.getItem('accessToken');
             const cartId = localStorage.getItem('cartId');
             
             if (!cartId) {
