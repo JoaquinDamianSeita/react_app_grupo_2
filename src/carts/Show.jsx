@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function ShowCart({ cartId }) {
     const [cart, setCart] = useState(null);
-    const [paymentMethod, setPaymentMethod] = useState('Efectivo');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -174,24 +173,15 @@ export default function ShowCart({ cartId }) {
                                     )}
                                 </div>
                             ))}
-                            {/*Metodos de pago*/}
-                            <div className="flex items-center gap-4 mt-10">
-                                <span className="font-medium">Metodo de pago:</span>
-                                <button
-                                    className={`px-4 py-1 rounded ${paymentMethod === 'Efectivo' ? 'bg-cyan-500 text-white' : 'bg-white text-cyan-700 border border-cyan-500'}`}
-                                    onClick={() => setPaymentMethod('Efectivo')}>Efectivo</button>
-                                <button
-                                    className={`px-4 py-1 rounded ${paymentMethod === 'Tarjeta' ? 'bg-cyan-500 text-white' : 'bg-white text-cyan-700 border border-cyan-500'}`}
-                                    onClick={() => setPaymentMethod('Tarjeta')}>Tarjeta</button>
+                            {/* Subtotal y botón Comprar dentro del container blanco */}
+                            <div className="flex justify-end items-center w-full mt-10">
+                                <span className="mr-6 text-gray-700 text-lg">Subtotal: <span className="font-semibold">${subtotal}</span></span>
+                                <button className="bg-cyan-700 text-white px-8 py-2 rounded hover:bg-cyan-800 transition text-lg" onClick={handleCheckout}>Comprar</button>
                             </div>
                         </div>
                     ) : (
                         <div className="text-center text-gray-500">El carrito está vacío</div>
                     )}
-                </div>
-                <div className="flex justify-end items-center w-full max-w-5xl mt-4">
-                    <span className="mr-6 text-gray-700 text-lg">Subtotal: <span className="font-semibold">${subtotal}</span></span>
-                    <button className="bg-cyan-700 text-white px-8 py-2 rounded hover:bg-cyan-800 transition text-lg" onClick={handleCheckout}>Comprar</button>
                 </div>
             </div>
         </>
