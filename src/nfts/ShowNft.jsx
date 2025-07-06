@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddToCartButton } from '../components/cart/AddToCartButton';
+import { useSelector } from 'react-redux';
 
 export default function ShowNFT() {
     const { id } = useParams();
     const [nft, setNft] = useState(null);
     const [quantity, setQuantity] = useState(1);
+    const token = useSelector(state => state.auth.token);
 
     useEffect(() => {
         const fetchNFT = async () => {
             try {
-                const accessToken = localStorage.getItem('accessToken');
                 const response = await fetch(`http://localhost:8080/api/nfts/${id}`, {
                     headers: {
-                        'Authorization': `Bearer ${accessToken}`
+                        'Authorization': `Bearer ${token}`
                     }
                 });
                 if (!response.ok) {
@@ -29,7 +30,7 @@ export default function ShowNFT() {
         if (id) {
             fetchNFT();
         }
-    }, [id]);
+    }, [id, token]);
 
     if (!nft) return (
         <div className="min-h-screen bg-cyan-700 flex items-center justify-center">

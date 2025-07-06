@@ -16,13 +16,14 @@ import Register from './users/Register.jsx';
 import { authService } from './services/authService';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
 
 // Componente para rutas protegidas
 const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = authService.isAuthenticated();
+  const token = useSelector(state => state.auth.token);
+  const isAuthenticated = !!token;
   
   useEffect(() => {
-    // Verificar autenticación cada vez que se monta el componente
     if (!isAuthenticated) {
       console.log('Usuario no autenticado, redirigiendo a login...');
     }

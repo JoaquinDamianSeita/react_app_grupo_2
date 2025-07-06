@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import Snackbar from '../utils/Snackbar'
 import { authService } from '../services/authService'
+import { useDispatch } from 'react-redux'
+import { setToken } from '../store'
 
 export default function Login() {
     const [error, setError] = useState('')
@@ -9,6 +11,7 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleCloseError = () => {
       setShowError(false)
@@ -31,9 +34,7 @@ export default function Login() {
       }
 
       try {
-        console.log('Iniciando proceso de login...')
-        await authService.login(credentials.username, credentials.password)
-        console.log('Login exitoso, redirigiendo...')
+        await authService.login(credentials.username, credentials.password, (token) => dispatch(setToken(token)))
         navigate('/')
       } catch (err) {
         console.error('Error en el proceso de login:', err)

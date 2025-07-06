@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { authService } from '../services/authService';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -16,6 +17,8 @@ export default function EditNFT() {
     const [imageUrl, setImageUrl] = useState('');
     const [physicalPieces, setPhysicalPieces] = useState('');
     const [available, setAvailable] = useState(true);
+
+    const token = useSelector(state => state.auth.token);
 
     useEffect(() => {
         async function fetchNFTs() {
@@ -82,12 +85,11 @@ export default function EditNFT() {
         };
 
         try {
-            const accessToken = localStorage.getItem('accessToken');
             const response = await fetch(`http://localhost:8080/api/nfts/${selectedId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(nftData)
             });
@@ -111,11 +113,10 @@ export default function EditNFT() {
         if (!confirmDelete) return;
 
         try {
-            const accessToken = localStorage.getItem('accessToken');
             const response = await fetch(`http://localhost:8080/api/nfts/${selectedId}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
 

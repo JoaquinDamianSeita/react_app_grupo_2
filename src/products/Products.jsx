@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Snackbar from '../utils/Snackbar'
+import { useSelector } from 'react-redux'
 
 export default function Products() {
   const [products, setProducts] = useState([])
@@ -15,6 +16,7 @@ export default function Products() {
     artType: ''
   })
   const navigate = useNavigate()
+  const token = useSelector(state => state.auth.token)
 
   useEffect(() => {
     fetchProducts()
@@ -25,8 +27,6 @@ export default function Products() {
   }, [filters, products])
 
   const fetchProducts = async () => {
-    const token = localStorage.getItem('accessToken')
-      
     if (!token) {
       navigate('/login')
       return

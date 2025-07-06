@@ -2,18 +2,18 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
 
-export default function ShowCart({ cartId }) {
+export default function ShowCart() {
     const [cart, setCart] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const token = useSelector(state => state.auth.token);
 
     const fetchCart = async () => {
         try {
-            const token = localStorage.getItem('accessToken');
             const cartId = localStorage.getItem('cartId');
-
             console.log("CARRITO: " + cartId);
 
             if (!cartId) {
@@ -45,14 +45,11 @@ export default function ShowCart({ cartId }) {
     };
 
     useEffect(() => {
-        if (cartId !== null) {
-            fetchCart();
-        }
-    }, [cartId]);
+        fetchCart();
+    }, []);
 
     const removeFromCart = async (nftId) => {
         try {
-            const token = localStorage.getItem('accessToken');
             const cartId = localStorage.getItem('cartId');
 
             const response = await fetch(`http://localhost:8080/api/cart/${cartId}/items/${nftId}`, {
@@ -78,7 +75,6 @@ export default function ShowCart({ cartId }) {
 
     const updateQuantity = async (nftId, newQuantity) => {
         try {
-            const token = localStorage.getItem('accessToken');
             const cartId = localStorage.getItem('cartId');
 
             const response = await fetch(`http://localhost:8080/api/cart/${cartId}/items/${nftId}`, {
@@ -105,8 +101,8 @@ export default function ShowCart({ cartId }) {
 
     const handleDeleteCart = async () => {
         try {
-            const token = localStorage.getItem('accessToken');
-            const id = cartId || localStorage.getItem('cartId');
+            const cartId = localStorage.getItem('cartId');
+            const id = cartId;
 
             if (!id) {
                 toast.error('No hay carrito para eliminar');
@@ -133,8 +129,8 @@ export default function ShowCart({ cartId }) {
         }
     };
 
-
     const handleCheckout = async () => {
+        const cartId = localStorage.getItem('cartId');
         navigate(`/cart/checkout/${cartId}`);
     }
 
