@@ -1,5 +1,6 @@
-
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function CreateNFT() {
     const [artType, setArtType] = useState('FISICO');
@@ -33,20 +34,21 @@ export default function CreateNFT() {
 
             if (response.ok) {
                 const result = await response.json();
-                alert('NFT creado con éxito');
+                toast.success('NFT creado con éxito');
                 console.log(result);
             } else {
                 const errorText = await response.text();
-                alert('Error: ' + errorText);
+                toast.error('Error: ' + errorText);
             }
         } catch (err) {
-            alert('Error al conectar con el servidor');
+            toast.error('Error al conectar con el servidor');
             console.error(err);
         }
     };
 
     return (
         <div className="min-h-screen bg-cyan-700 flex items-center justify-center">
+            {/* <ToastContainer /> */}
             <div className="flex gap-8 max-w-7xl mx-auto">
                 {/* Imagen */}
                 <div className="bg-white p-4 rounded-xl shadow w-730px] h-[764px]">

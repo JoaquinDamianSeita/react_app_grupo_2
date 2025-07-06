@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { authService } from '../services/authService';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -91,13 +93,13 @@ export default function EditNFT() {
             });
 
             if (response.ok) {
-                alert('NFT editado con éxito');
+                toast.success('NFT editado con éxito');
             } else {
                 const errorText = await response.text();
-                alert('Error: ' + errorText);
+                toast.error('Error: ' + errorText);
             }
         } catch (err) {
-            alert('Error al conectar con el servidor');
+            toast.error('Error al conectar con el servidor');
             console.error(err);
         }
     };
@@ -118,7 +120,7 @@ export default function EditNFT() {
             });
 
             if (response.ok) {
-                alert('NFT borrado con éxito');
+                toast.success('NFT borrado con éxito');
 
                 setSelectedId('');
                 setTitle('');
@@ -132,17 +134,18 @@ export default function EditNFT() {
                 setNfts(prev => prev.filter(nft => nft.id !== parseInt(selectedId)));
             } else {
                 const errorText = await response.text();
+                toast.error('Error al borrar el NFT: ' + errorText);
                 console.error('Error al borrar:', errorText);
-                alert('Error al borrar el NFT: ' + errorText);
             }
         } catch (err) {
-            alert('Error al conectar con el servidor');
+            toast.error('Error al conectar con el servidor');
             console.error(err);
         }
     };
 
     return (
         <div className="min-h-screen bg-cyan-700 flex items-center justify-center">
+            <ToastContainer />
             <div className="flex gap-8 max-w-7xl mx-auto">
                 {/* Imagen */}
                 <div className="bg-white p-4 rounded-xl shadow w-730px] h-[764px]">
