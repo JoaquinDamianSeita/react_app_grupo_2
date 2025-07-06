@@ -150,7 +150,7 @@ export default function Profile() {
       return
     }
 
-    if (!token || !authService.isAuthenticated()) {
+    if (!token) {
       navigate('/login')
       return
     }
