@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ShowCart({ cartId }) {
     const [cart, setCart] = useState(null);
@@ -108,7 +110,7 @@ export default function ShowCart({ cartId }) {
             const id = cartId || localStorage.getItem('cartId');
 
             if (!id) {
-                alert('No hay carrito para eliminar');
+                toast.error('No hay carrito para eliminar');
                 return;
             }
 
@@ -124,10 +126,10 @@ export default function ShowCart({ cartId }) {
             // Limpia el localStorage
             localStorage.removeItem('cartId');
 
-            alert('Carrito eliminado correctamente.');
+            toast.success('Carrito eliminado correctamente.');
             navigate('/');
         } catch (error) {
-            alert(error.message);
+            toast.error(error.message);
             console.error("Error al eliminar el carrito:", error);
         }
     };
@@ -141,6 +143,7 @@ export default function ShowCart({ cartId }) {
 
     return (
         <>
+            <ToastContainer />
             <div className="min-h-screen bg-cyan-700 flex flex-col items-center justify-start py-12">
                 <div className="bg-white rounded-lg shadow-lg w-full max-w-5xl p-10">
                     <h2 className="text-3xl font-bold text-center mb-8">Carrito de Compras</h2>

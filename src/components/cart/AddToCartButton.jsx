@@ -1,3 +1,6 @@
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export function AddToCartButton({ nftId, physicalPieces = 0, onAdded}) {
     const handleAddToCart = async () => {
         try {
@@ -57,20 +60,23 @@ export function AddToCartButton({ nftId, physicalPieces = 0, onAdded}) {
                 }
             }
 
-            alert("NFT agregado al carrito");
+            toast.success("NFT agregado al carrito");
             onAdded && onAdded();
         } catch (error) {
             console.error('Error al agregar al carrito:', error);
-            alert(error.message || "Error al procesar la operación");
+            toast.error(error.message || "Error al procesar la operación");
         }
     };
 
     return (
-        <button 
-            className="w-full bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700 transition-colors"
-            onClick={handleAddToCart}
-        >
-            Agregar al carrito
-        </button>
+        <>
+            {/* <ToastContainer /> */}
+            <button 
+                className="w-full bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700 transition-colors"
+                onClick={handleAddToCart}
+            >
+                Agregar al carrito
+            </button>
+        </>
     );
 } 
