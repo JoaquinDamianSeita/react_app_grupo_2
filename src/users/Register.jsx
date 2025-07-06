@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import Snackbar from '../utils/Snackbar'
+import { authService } from '../services/authService'
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -235,9 +236,14 @@ export default function Register() {
         }
 
         setSuccess(true)
-        setTimeout(() => {
-          navigate('/login')
-        }, 2000)
+        // Login automático después del registro exitoso
+        try {
+          await authService.login(formData.username, formData.password)
+          navigate('/')
+        } catch (loginError) {
+          setError('Registro exitoso, pero error al iniciar sesión automáticamente: ' + (loginError.message || ''))
+          setShowError(true)
+        }
       } catch (err) {
         setError(err.message)
         setShowError(true)
