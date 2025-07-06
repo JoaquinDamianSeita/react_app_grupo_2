@@ -6,6 +6,9 @@ export default function Checkout() {
     const [checkoutData, setCheckoutData] = useState(null);
     const [error, setError] = useState(null);
     const [paymentMethod, setPaymentMethod] = useState('Efectivo');
+    const [cardNumber, setCardNumber] = useState('');
+    const [cardExpiry, setCardExpiry] = useState('');
+    const [cardCCV, setCardCCV] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
 
     const formatDate = (dateString) => {
@@ -68,6 +71,24 @@ export default function Checkout() {
         }
     };
 
+    // Formateo visual para número de tarjeta
+    const handleCardNumberChange = (e) => {
+        let value = e.target.value.replace(/\D/g, ''); // Solo dígitos
+        value = value.slice(0, 16); // Máximo 16 dígitos
+        let formatted = value.replace(/(.{4})/g, '$1 ').trim();
+        setCardNumber(formatted);
+    };
+
+    // Formateo visual para vencimiento MM/AA
+    const handleCardExpiryChange = (e) => {
+        let value = e.target.value.replace(/\D/g, ''); // Solo dígitos
+        value = value.slice(0, 4); // Máximo 4 dígitos
+        if (value.length > 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        setCardExpiry(value);
+    };
+
     return (
         <div className="min-h-screen bg-cyan-700 flex items-center justify-center py-12">
             <div className="flex gap-10 w-full max-w-6xl">
@@ -119,6 +140,45 @@ export default function Checkout() {
                                         Tarjeta
                                     </button>
                                 </div>
+                                {paymentMethod === 'Tarjeta' && (
+                                    <div className="mt-6 space-y-4">
+                                        <div>
+                                            <label className="block text-md font-medium mb-1">Número de Tarjeta</label>
+                                            <input
+                                                type="text"
+                                                value={cardNumber}
+                                                onChange={handleCardNumberChange}
+                                                placeholder="1234 5678 9012 3456"
+                                                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-cyan-600 text-lg"
+                                                maxLength={19}
+                                            />
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <div className="flex-1">
+                                                <label className="block text-md font-medium mb-1">Vencimiento</label>
+                                                <input
+                                                    type="text"
+                                                    value={cardExpiry}
+                                                    onChange={handleCardExpiryChange}
+                                                    placeholder="MM/AA"
+                                                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-cyan-600 text-lg"
+                                                    maxLength={5}
+                                                />
+                                            </div>
+                                            <div className="flex-1">
+                                                <label className="block text-md font-medium mb-1">CCV</label>
+                                                <input
+                                                    type="password"
+                                                    value={cardCCV}
+                                                    onChange={e => setCardCCV(e.target.value)}
+                                                    placeholder="123"
+                                                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-cyan-600 text-lg"
+                                                    maxLength={4}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                             <button
                                 onClick={handleCheckout}
