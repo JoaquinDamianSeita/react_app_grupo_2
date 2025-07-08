@@ -1,7 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Snackbar from '../utils/Snackbar'
 import { authService } from '../services/authService'
+import { setToken } from '../store'
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -35,6 +37,7 @@ export default function Register() {
       roleId: ''
     })
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const validateField = (name, value) => {
       let error = ''
@@ -238,10 +241,16 @@ export default function Register() {
         setSuccess(true)
         // Login automático después del registro exitoso
         try {
-          await authService.login(formData.username, formData.password)
-          navigate('/')
+          await authService.login(formData.username, formData.password, (token) => {
+            dispatch(setToken(token))
+          })
+          // Pequeña pausa para que el usuario vea el mensaje de éxito y el token se guarde
+          setTimeout(() => {
+            navigate('/')
+          }, 1500)
         } catch (loginError) {
-          setError('Registro exitoso, pero error al iniciar sesión automáticamente: ' + (loginError.message || ''))
+          console.error('Error en login automático:', loginError)
+          setError('Registro exitoso, pero error al iniciar sesión automáticamente. Por favor, inicia sesión manualmente.')
           setShowError(true)
         }
       } catch (err) {
@@ -597,7 +606,7 @@ export default function Register() {
 
         <Snackbar
           show={success}
-          message="¡Usuario registrado con éxito! Redirigiendo al login..."
+          message="¡Usuario registrado con éxito! Iniciando sesión automáticamente..."
           variant="success"
           position="bottom-right"
         />

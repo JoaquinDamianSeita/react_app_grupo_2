@@ -69,7 +69,8 @@ export const authService = {
     },
 
     getToken: () => {
-        // getToken y logout deben ser adaptados para Redux en los componentes
+        // getToken debe ser adaptado para Redux en los componentes
+        // Por ahora retorna null, pero en el futuro se puede conectar con Redux
         return null;
     },
 
