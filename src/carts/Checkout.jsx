@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function Checkout() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const [checkoutData, setCheckoutData] = useState(null);
     const [error, setError] = useState(null);
     const [paymentMethod, setPaymentMethod] = useState('Efectivo');
@@ -11,7 +13,9 @@ export default function Checkout() {
     const [cardExpiry, setCardExpiry] = useState('');
     const [cardCCV, setCardCCV] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
+
     const token = useSelector(state => state.auth.token);
+    const cartId = useSelector(state => state.cart.cartId);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -21,7 +25,6 @@ export default function Checkout() {
     const handleCheckout = async () => {
         try {
             setIsProcessing(true);
-            const cartId = localStorage.getItem('cartId');
             
             if (!cartId) {
                 throw new Error('No hay carrito activo');
@@ -61,9 +64,9 @@ export default function Checkout() {
                 throw new Error(errorData.message || 'Error al registrar la venta');
             }
 
-            // Si todo sale bien, muestra el resumen
+            // Si todo sale bien, muestra el resumen y limpia el store
             setCheckoutData(data);
-            localStorage.removeItem('cartId');
+            dispatch(clearCart());
         } catch (error) {
             console.error('Error en el checkout:', error);
             setError(error.message || 'Error al procesar el checkout');
