@@ -1,9 +1,12 @@
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCartId } from '../../Redux/cartSlice';
 
 export function AddToCartButton({ nftId, physicalPieces = 0, onAdded}) {
     const token = useSelector(state => state.auth.token);
+    const dispatch = useDispatch();
+    const cartId = useSelector(state => state.cart.cartId);
 
     const handleAddToCart = async () => {
         try {
@@ -11,7 +14,6 @@ export function AddToCartButton({ nftId, physicalPieces = 0, onAdded}) {
                 throw new Error("Debes iniciar sesión para agregar al carrito");
             }
 
-            const cartId = localStorage.getItem("cartId");
             const headers = {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
@@ -20,7 +22,7 @@ export function AddToCartButton({ nftId, physicalPieces = 0, onAdded}) {
             
             let response;
     
-            if (cartId === null) {
+            if (cartId === null || !cartId) {
                 // Si no hay carrito, se crea uno con el primer item
                 response = await fetch("http://localhost:8080/api/cart/items", {
                     method: "POST",
@@ -37,12 +39,7 @@ export function AddToCartButton({ nftId, physicalPieces = 0, onAdded}) {
                 }
 
                 const data = await response.json();
-                const newCartId = data.cartId;
-                if (newCartId) {
-                    localStorage.setItem("cartId", newCartId);
-                } else {
-                    throw new Error("Error al crear el carrito");
-                }
+                dispatch(setCartId(data.cartId));
             } else {
                 // Si hay carrito, se actualiza con el nuevo item
                 response = await fetch(`http://localhost:8080/api/cart/${cartId}`, {

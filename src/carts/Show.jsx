@@ -2,18 +2,21 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearCart } from '../Redux/cartSlice';
 
 export default function ShowCart() {
     const [cart, setCart] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const token = useSelector(state => state.auth.token);
+    const cartId = useSelector(state => state.cart.cartId);
 
     const fetchCart = async () => {
         try {
-            const cartId = localStorage.getItem('cartId');
             console.log("CARRITO: " + cartId);
 
             if (!cartId) {
@@ -46,12 +49,10 @@ export default function ShowCart() {
 
     useEffect(() => {
         fetchCart();
-    }, []);
+    }, [cartId]);
 
     const removeFromCart = async (nftId) => {
         try {
-            const cartId = localStorage.getItem('cartId');
-
             const response = await fetch(`http://localhost:8080/api/cart/${cartId}/items/${nftId}`, {
                 method: 'DELETE',
                 headers: {
@@ -75,8 +76,6 @@ export default function ShowCart() {
 
     const updateQuantity = async (nftId, newQuantity) => {
         try {
-            const cartId = localStorage.getItem('cartId');
-
             const response = await fetch(`http://localhost:8080/api/cart/${cartId}/items/${nftId}`, {
                 method: 'PUT',
                 headers: {
@@ -101,15 +100,12 @@ export default function ShowCart() {
 
     const handleDeleteCart = async () => {
         try {
-            const cartId = localStorage.getItem('cartId');
-            const id = cartId;
-
-            if (!id) {
+            if (!cartId) {
                 toast.error('No hay carrito para eliminar');
                 return;
             }
 
-            const response = await fetch(`http://localhost:8080/api/cart/${id}`, {
+            const response = await fetch(`http://localhost:8080/api/cart/${cartId}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -118,8 +114,8 @@ export default function ShowCart() {
 
             if (!response.ok) throw new Error('Error al eliminar el carrito.');
 
-            // Limpia el localStorage
-            localStorage.removeItem('cartId');
+            // Limpia el store
+            dispatch(clearCart());
 
             toast.success('Carrito eliminado correctamente.');
             navigate('/');
@@ -130,7 +126,10 @@ export default function ShowCart() {
     };
 
     const handleCheckout = async () => {
-        const cartId = localStorage.getItem('cartId');
+        if (!cartId) {
+            toast.error('No hay carrito activo');
+            return;
+        }
         navigate(`/cart/checkout/${cartId}`);
     }
 
