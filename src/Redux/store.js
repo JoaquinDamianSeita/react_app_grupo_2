@@ -1,5 +1,6 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import cartReducer from './cartSlice';
+import salesReducer from './salesSlice';
 
 const initialAuthState = {
   token: null,
@@ -24,6 +25,7 @@ const store = configureStore({
   reducer: {
     auth: authSlice.reducer,
     cart: cartReducer,
+    sales: salesReducer,
   },
 });
 

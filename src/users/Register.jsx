@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import Snackbar from '../utils/Snackbar'
 import { authService } from '../services/authService'
-import { setToken } from '../store'
+import { setToken } from '../Redux/store'
 
 const API_BASE_URL = 'http://localhost:8080';
 

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Snackbar from '../utils/Snackbar'
 import { authService } from '../services/authService'
 import { useDispatch } from 'react-redux'
-import { setToken } from '../store'
+import { setToken } from '../Redux/store'
 
 export default function Login() {
     const [error, setError] = useState('')

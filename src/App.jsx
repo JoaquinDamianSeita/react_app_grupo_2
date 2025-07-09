@@ -51,7 +51,7 @@ const LayoutWithNavbar = ({ children }) => {
 function App() {
   return (
     <>
-      <ToastContainer position="top-right" />
+      <ToastContainer position="bottom-right" />
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
           {/* Rutas públicas sin Navbar */}
