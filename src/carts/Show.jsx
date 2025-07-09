@@ -3,24 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearCart } from '../Redux/cartSlice';
+import { clearCart, syncCart, setError, setLoading } from '../Redux/cartSlice';
 
 export default function ShowCart() {
     const [cart, setCart] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const token = useSelector(state => state.auth.token);
     const cartId = useSelector(state => state.cart.cartId);
+    const cartItems = useSelector(state => state.cart.items);
+    const error = useSelector(state => state.cart.error);
+    const loading = useSelector(state => state.cart.loading);
 
     const fetchCart = async () => {
         try {
+            dispatch(setLoading(true));
+            dispatch(setError(null));
+
             console.log("CARRITO: " + cartId);
 
             if (!cartId) {
-                setError('No hay carrito activo');
+                dispatch(setError('No hay carrito activo'));
                 return;
             }
 
@@ -39,11 +43,17 @@ export default function ShowCart() {
 
             const data = await response.json();
             setCart(data);
+
+            // Sincroniza el carrito con Redux
+            dispatch(syncCart({
+                cartId: cartId,
+                items: data.nfts || []
+            }));
         } catch (error) {
             console.error('Error al cargar el carrito:', error);
-            setError(error.message || 'Error al cargar el carrito');
+            dispatch(setError(error.message || 'Error al cargar el carrito'));
         } finally {
-            setLoading(false);
+            dispatch(setLoading(false));
         }
     };
 
@@ -67,10 +77,11 @@ export default function ShowCart() {
             }
 
             // Actualizar el carrito después de eliminar
-            fetchCart();
+            await fetchCart();
+            toast.success('NFT eliminado del carrito');
         } catch (error) {
             console.error('Error al eliminar del carrito:', error);
-            setError(error.message || 'Error al eliminar del carrito');
+            toast.error(error.message || 'Error al eliminar del carrito');
         }
     };
 
@@ -91,10 +102,11 @@ export default function ShowCart() {
             }
 
             // Actualizar el carrito después de modificar
-            fetchCart();
+            await fetchCart();
+            toast.success('Cantidad actualizada');
         } catch (error) {
             console.error('Error al actualizar cantidad:', error);
-            setError(error.message || 'Error al actualizar la cantidad');
+            toast.error(error.message || 'Error al actualizar la cantidad');
         }
     };
 
@@ -116,6 +128,7 @@ export default function ShowCart() {
 
             // Limpia el store
             dispatch(clearCart());
+            setLocalCart(null);
 
             toast.success('Carrito eliminado correctamente.');
             navigate('/');
@@ -131,6 +144,27 @@ export default function ShowCart() {
             return;
         }
         navigate(`/cart/checkout/${cartId}`);
+    }
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-cyan-700 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-cyan-900"></div>
+                <h2 className="text-3xl font-bold text-center mb-8">Cargando...</h2>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-cyan-700 flex items-center justify-center">
+                <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <p className="text-red-500 mb-4">Error al cargar el carrito</p>
+                    <button onClick={() => navigate('/')} className="bg-cyan-700 text-white px-4 py-2 rounded hover:bg-cyan-800">Volver al inicio</button>
+                </div>
+                <h2 className="">{error}</h2>
+            </div>
+        );
     }
 
     const subtotal = cart?.nfts.reduce((acc, nft) => acc + nft.price, 0) || 0;
