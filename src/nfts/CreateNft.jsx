@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 
 export default function CreateNFT() {
-    const [artType, setArtType] = useState('FISICO');
+    const [artType, setArtType] = useState('PHYSICAL');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
@@ -111,8 +111,8 @@ export default function CreateNFT() {
                             <div className="flex gap-4">
                                 <button
                                     type="button"
-                                    onClick={() => setArtType('FISICO')}
-                                    className={`px-6 py-4 rounded ${artType === 'FISICO' ? 'bg-cyan-700 text-white font-bold' : 'bg-cyan-700 text-white'}`}
+                                    onClick={() => setArtType('PHYSICAL')}
+                                    className={`px-6 py-4 rounded ${artType === 'PHYSICAL' ? 'bg-cyan-700 text-white font-bold' : 'bg-cyan-700 text-white'}`}
                                 >
                                     Físico
                                 </button>
