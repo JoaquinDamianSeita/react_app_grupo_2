@@ -6,12 +6,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { clearCart, syncCart, setError, setLoading } from '../Redux/cartSlice';
 
 export default function ShowCart() {
-    const [cart, setCart] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const token = useSelector(state => state.auth.token);
     const cartId = useSelector(state => state.cart.cartId);
+    const nfts = useSelector(state => state.cart.nfts);
 
     const fetchCart = async () => {
         try {
@@ -39,7 +39,6 @@ export default function ShowCart() {
             }
 
             const data = await response.json();
-            setCart(data);
 
             // Sincroniza el carrito con Redux
             dispatch(syncCart({
@@ -125,7 +124,6 @@ export default function ShowCart() {
 
             // Limpia el store
             dispatch(clearCart());
-            setLocalCart(null);
 
             toast.success('Carrito eliminado correctamente.');
             navigate('/');
@@ -143,7 +141,7 @@ export default function ShowCart() {
         navigate(`/cart/checkout/${cartId}`);
     }
 
-    const subtotal = cart?.nfts.reduce((acc, nft) => acc + nft.price, 0) || 0;
+    const subtotal = nfts.reduce((acc, nft) => acc + nft.price, 0) || 0;
 
     return (
         <>
@@ -159,9 +157,9 @@ export default function ShowCart() {
                             Eliminar Carrito
                         </button>
                     </div>
-                    {cart?.nfts ? (
+                    {nfts.length > 0 ? (
                         <div>
-                            {cart.nfts.map((nft, idx) => (
+                            {nfts.map((nft, idx) => (
                                 <div key={nft.id}>
                                     <div className="flex items-center gap-6 justify-between py-6">
                                         <div className="flex items-center gap-6">
@@ -173,7 +171,7 @@ export default function ShowCart() {
                                         </div>
                                         <div className="text-lg font-medium">${nft.price}</div>
                                     </div>
-                                    {idx < cart.nfts.length - 1 && (
+                                    {idx < nfts.length - 1 && (
                                         <hr className="border-t border-gray-200 my-6" />
                                     )}
                                 </div>
