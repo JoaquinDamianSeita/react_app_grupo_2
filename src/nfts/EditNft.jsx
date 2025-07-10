@@ -23,12 +23,6 @@ export default function EditNFT() {
     useEffect(() => {
         async function fetchNFTs() {
             try {
-                const token = authService.getToken();
-                if (!token) {
-                    console.error('No access token found');
-                    return;
-                }
-
                 // Primero obtenemos los datos del usuario
                 const userResponse = await fetch(`${API_BASE_URL}/api/users/me`, {
                     headers: {

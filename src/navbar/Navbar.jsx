@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearToken } from '../store';
+import { clearToken } from '../Redux/store';
 
 const API_BASE_URL = 'http://localhost:8080';
 

@@ -1,5 +1,6 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import cartReducer from './cartSlice';
+import nftReducer from './nftSlice';
 
 const initialAuthState = {
   token: null,
@@ -24,6 +25,7 @@ const store = configureStore({
   reducer: {
     auth: authSlice.reducer,
     cart: cartReducer,
+    nft: nftReducer,
   },
 });
 
