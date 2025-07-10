@@ -1,38 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSelectedNft, setError, setLoading } from '../Redux/nftSlice';
 import { AddToCartButton } from '../components/cart/AddToCartButton';
-import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ShowNFT() {
     const { id } = useParams();
-    const [nft, setNft] = useState(null);
+    const dispatch = useDispatch();
     const [quantity, setQuantity] = useState(1);
+    
     const token = useSelector(state => state.auth.token);
+    const { selectedNft: nft, loading, error } = useSelector(state => state.nft);
 
     useEffect(() => {
         const fetchNFT = async () => {
             try {
+                dispatch(setLoading(true));
                 const response = await fetch(`http://localhost:8080/api/nfts/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
+                
                 if (!response.ok) {
-                    throw new Error('Error al cargar el NFT');
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || 'Error al cargar el NFT');
                 }
+                
                 const data = await response.json();
-                setNft(data);
+                dispatch(setSelectedNft(data));
             } catch (error) {
                 console.error('Error fetching NFT:', error);
+                dispatch(setError(error.message));
+                toast.error(error.message || 'Error al cargar el NFT');
             }
         };
 
         if (id) {
             fetchNFT();
         }
-    }, [id, token]);
+    }, [id, token, dispatch]);
 
-    if (!nft) return (
+    if (!nft || loading) return (
         <div className="min-h-screen bg-cyan-700 flex items-center justify-center">
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
         </div>

@@ -3,24 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearCart } from '../Redux/cartSlice';
+import { clearCart, syncCart, setError, setLoading } from '../Redux/cartSlice';
 
 export default function ShowCart() {
-    const [cart, setCart] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const token = useSelector(state => state.auth.token);
     const cartId = useSelector(state => state.cart.cartId);
+    const nfts = useSelector(state => state.cart.nfts);
 
     const fetchCart = async () => {
         try {
+            dispatch(setLoading(true));
+            dispatch(setError(null));
+
             console.log("CARRITO: " + cartId);
 
             if (!cartId) {
-                setError('No hay carrito activo');
+                dispatch(setError('No hay carrito activo'));
                 return;
             }
 
@@ -38,12 +39,17 @@ export default function ShowCart() {
             }
 
             const data = await response.json();
-            setCart(data);
+
+            // Sincroniza el carrito con Redux
+            dispatch(syncCart({
+                cartId: cartId,
+                nfts: data.nfts || []
+            }));
         } catch (error) {
             console.error('Error al cargar el carrito:', error);
-            setError(error.message || 'Error al cargar el carrito');
+            dispatch(setError(error.message || 'Error al cargar el carrito'));
         } finally {
-            setLoading(false);
+            dispatch(setLoading(false));
         }
     };
 
@@ -67,10 +73,11 @@ export default function ShowCart() {
             }
 
             // Actualizar el carrito después de eliminar
-            fetchCart();
+            await fetchCart();
+            toast.success('NFT eliminado del carrito');
         } catch (error) {
             console.error('Error al eliminar del carrito:', error);
-            setError(error.message || 'Error al eliminar del carrito');
+            toast.error(error.message || 'Error al eliminar del carrito');
         }
     };
 
@@ -91,10 +98,11 @@ export default function ShowCart() {
             }
 
             // Actualizar el carrito después de modificar
-            fetchCart();
+            await fetchCart();
+            toast.success('Cantidad actualizada');
         } catch (error) {
             console.error('Error al actualizar cantidad:', error);
-            setError(error.message || 'Error al actualizar la cantidad');
+            toast.error(error.message || 'Error al actualizar la cantidad');
         }
     };
 
@@ -133,7 +141,7 @@ export default function ShowCart() {
         navigate(`/cart/checkout/${cartId}`);
     }
 
-    const subtotal = cart?.nfts.reduce((acc, nft) => acc + nft.price, 0) || 0;
+    const subtotal = nfts.reduce((acc, nft) => acc + nft.price, 0) || 0;
 
     return (
         <>
@@ -149,9 +157,9 @@ export default function ShowCart() {
                             Eliminar Carrito
                         </button>
                     </div>
-                    {cart?.nfts ? (
+                    {nfts.length > 0 ? (
                         <div>
-                            {cart.nfts.map((nft, idx) => (
+                            {nfts.map((nft, idx) => (
                                 <div key={nft.id}>
                                     <div className="flex items-center gap-6 justify-between py-6">
                                         <div className="flex items-center gap-6">
@@ -163,7 +171,7 @@ export default function ShowCart() {
                                         </div>
                                         <div className="text-lg font-medium">${nft.price}</div>
                                     </div>
-                                    {idx < cart.nfts.length - 1 && (
+                                    {idx < nfts.length - 1 && (
                                         <hr className="border-t border-gray-200 my-6" />
                                     )}
                                 </div>

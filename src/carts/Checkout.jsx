@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLoading, addSale } from '../Redux/salesSlice';
-import { clearCart } from '../Redux/cartSlice';
 import { toast } from 'react-toastify';
+import { clearCart } from '../Redux/cartSlice'
+
 
 export default function Checkout() {
     const navigate = useNavigate();
