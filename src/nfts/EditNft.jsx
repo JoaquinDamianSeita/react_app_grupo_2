@@ -103,9 +103,6 @@ export default function EditNFT() {
     const handleDelete = async () => {
         if (!selectedId) return;
 
-        const confirmDelete = window.confirm('¿Estás seguro de que querés borrar este NFT?');
-        if (!confirmDelete) return;
-
         try {
             const response = await fetch(`http://localhost:8080/api/nfts/${selectedId}`, {
                 method: 'DELETE',
