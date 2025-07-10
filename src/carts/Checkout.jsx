@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { setLoading, addSale } from '../Redux/salesSlice';
+import { toast } from 'react-toastify';
 import { clearCart } from '../Redux/cartSlice'
+
 
 export default function Checkout() {
     const navigate = useNavigate();
@@ -26,7 +29,9 @@ export default function Checkout() {
     const handleCheckout = async () => {
         try {
             setIsProcessing(true);
+            dispatch(setLoading(true));
             
+
             if (!cartId) {
                 throw new Error('No hay carrito activo');
             }
@@ -48,7 +53,7 @@ export default function Checkout() {
 
             const data = await response.json();
 
-            // 2. Crear la venta
+            // 2. Crear la venta 
             const saleResponse = await fetch('http://localhost:8080/api/sales', {
                 method: 'POST',
                 headers: {
@@ -56,7 +61,7 @@ export default function Checkout() {
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    cartId: data.cartId // Usa el cartId que devuelve el checkout
+                    cartId: data.cartId
                 })
             });
 
@@ -65,14 +70,20 @@ export default function Checkout() {
                 throw new Error(errorData.message || 'Error al registrar la venta');
             }
 
+            const saleData = await saleResponse.json();
+            dispatch(addSale(saleData));
+
             // Si todo sale bien, muestra el resumen y limpia el store
             setCheckoutData(data);
+            toast.success('¡Compra exitosa!');
             dispatch(clearCart());
         } catch (error) {
             console.error('Error en el checkout:', error);
             setError(error.message || 'Error al procesar el checkout');
+            
         } finally {
             setIsProcessing(false);
+            dispatch(setLoading(false));
         }
     };
 
