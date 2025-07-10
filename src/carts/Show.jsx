@@ -12,8 +12,6 @@ export default function ShowCart() {
 
     const token = useSelector(state => state.auth.token);
     const cartId = useSelector(state => state.cart.cartId);
-    const error = useSelector(state => state.cart.error);
-    const loading = useSelector(state => state.cart.loading);
 
     const fetchCart = async () => {
         try {
@@ -143,27 +141,6 @@ export default function ShowCart() {
             return;
         }
         navigate(`/cart/checkout/${cartId}`);
-    }
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-cyan-700 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-cyan-900"></div>
-                <h2 className="text-3xl font-bold text-center mb-8">Cargando...</h2>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="min-h-screen bg-cyan-700 flex items-center justify-center">
-                <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                    <p className="text-red-500 mb-4">Error al cargar el carrito</p>
-                    <button onClick={() => navigate('/')} className="bg-cyan-700 text-white px-4 py-2 rounded hover:bg-cyan-800">Volver al inicio</button>
-                </div>
-                <h2 className="">{error}</h2>
-            </div>
-        );
     }
 
     const subtotal = cart?.nfts.reduce((acc, nft) => acc + nft.price, 0) || 0;
