@@ -140,7 +140,7 @@ export default function EditNFT() {
 
     return (
         <div className="min-h-screen bg-cyan-700 flex items-center justify-center">
-            <ToastContainer />
+            {/* <ToastContainer /> */}
             <div className="flex gap-8 max-w-7xl mx-auto">
                 {/* Imagen */}
                 <div className="bg-white p-4 rounded-xl shadow w-730px] h-[764px]">

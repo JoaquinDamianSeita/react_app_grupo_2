@@ -145,7 +145,7 @@ export default function ShowCart() {
 
     return (
         <>
-            <ToastContainer />
+            {/* <ToastContainer /> */}
             <div className="min-h-screen bg-cyan-700 flex flex-col items-center justify-start py-12">
                 <div className="bg-white rounded-lg shadow-lg w-full max-w-5xl p-10">
                     <h2 className="text-3xl font-bold text-center mb-8">Carrito de Compras</h2>
