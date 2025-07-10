@@ -12,7 +12,6 @@ export default function ShowCart() {
 
     const token = useSelector(state => state.auth.token);
     const cartId = useSelector(state => state.cart.cartId);
-    const cartItems = useSelector(state => state.cart.items);
     const error = useSelector(state => state.cart.error);
     const loading = useSelector(state => state.cart.loading);
 
@@ -47,7 +46,7 @@ export default function ShowCart() {
             // Sincroniza el carrito con Redux
             dispatch(syncCart({
                 cartId: cartId,
-                items: data.nfts || []
+                nfts: data.nfts || []
             }));
         } catch (error) {
             console.error('Error al cargar el carrito:', error);

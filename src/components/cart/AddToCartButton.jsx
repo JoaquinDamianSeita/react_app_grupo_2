@@ -86,7 +86,7 @@ export function AddToCartButton({ nftId, physicalPieces = 0, onAdded}) {
                 const data = await response.json();
                 dispatch(syncCart({
                     cartId: cartId,
-                    items: data.nfts || []
+                    nfts: data.nfts || []
                 }));
             }
         } catch (error) {

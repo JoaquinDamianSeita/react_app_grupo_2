@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialCartState = {
     cartId: null,
-    items: [],
+    nfts: [],
     loading: false,
     error: null,
 };
@@ -16,21 +16,18 @@ const cartSlice = createSlice({
         },
         clearCart: (state) => {
             state.cartId = null;
-            state.items = [];
+            state.nfts = [];
             state.error = null;
         },
-        setItems: (state, action) => {
-            state.items = action.payload;
-        },
         addItem: (state, action) => {
-            state.items.push(action.payload);
+            state.nfts.push(action.payload);
         },
         removeItem: (state, action) => {
-            state.items = state.items.filter(item => item.id !== action.payload);
+            state.nfts = state.nfts.filter(item => item.id !== action.payload);
         },
         syncCart: (state, action) => {
             state.cartId = action.payload.cartId;
-            state.items = action.payload.items || [];
+            state.nfts = action.payload.nfts || [];
             state.error = null;
         },
         setLoading: (state, action) => {
@@ -42,6 +39,6 @@ const cartSlice = createSlice({
     },
 });
 
-export const { setCartId, clearCart, setItems, addItem, removeItem, syncCart, setLoading, setError } = cartSlice.actions;
+export const { setCartId, clearCart, addItem, removeItem, syncCart, setLoading, setError } = cartSlice.actions;
 
 export default cartSlice.reducer;
